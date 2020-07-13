@@ -57,23 +57,19 @@ const Home = () => {
             .catch(err => console.log('Houve um problema ao buscar as mensagens', err));
     }
 
-    
-    const getFinalMessage = (message, payload) => {
-        if (message.id === 'final') {
-            setTimeout(() => {
-                axios.post(endpoints.FINISH_ENDPOINT, { answers: payload.answers })
-                    .then(res => setCompleted({ completed: true, profile: res.data.user }))
-                    .catch(err => console.log('erro ao obter resultado'));
-            }, 1000)
-        }
-    }
-
     const onInputChange = e => {
         setInput({ ...input, value: e.target.value });
     }
+    
+    const getFinalMessage = (message, payload) => {
+        if (message.id === 'final') {
+            axios.post(endpoints.FINISH_ENDPOINT, { answers: payload.answers })
+            .then(res => setCompleted({ completed: true, profile: res.data.user }))
+            .catch(err => console.log('erro ao obter resultado'));
+        }
+    }
 
     const getInputType = message => {
-
         if (message.inputs.length > 0) {
             switch (message.inputs[0].type) {
                 case 'string' || 'email' || 'currency':
@@ -91,10 +87,7 @@ const Home = () => {
                 default: ''
             }
         } else if (message.buttons.length > 0) {
-            return {
-                inputMethod: 'buttons',
-                buttons: message.buttons
-            }
+            return { inputMethod: 'buttons', buttons: message.buttons }
         }
     }
 
@@ -121,7 +114,7 @@ const Home = () => {
                         <div>
                             <MessageBox id='message-box'>
                                 {
-                                    messages.length ? messages.map(message => <Message key={Math.random()} message={message.value} isUser={message.isUser} />) : ''
+                                    messages.map(message => <Message key={Math.random()} message={message.value} isUser={message.isUser} />)
                                 }
                             </MessageBox>
                             <form onSubmit={onMessageSubmit}>
@@ -168,7 +161,7 @@ const Home = () => {
                                             )
                                     }
 
-                                    <button disabled={input && !input.value ? 'disabled' : ''} className='submit-button' type='submit'>
+                                    <button disabled={(input && !input.value) || !input ? 'disabled' : ''} className='submit-button' type='submit'>
                                         <FontAwesomeIcon icon={faPaperPlane} />
                                     </button>
                                 </ContainerInput>
